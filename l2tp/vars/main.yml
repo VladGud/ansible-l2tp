@@ -1,0 +1,9 @@
+---
+# vars file for l2tp
+user_vpn:
+  name: "ivanov"
+  password: "pass"
+  special_ip: "10.128.0.151"
+
+connect_name: "l2tp-vpn"
+ip_range: "10.128.0.150-10.128.0.200"

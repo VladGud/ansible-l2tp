@@ -1,0 +1,51 @@
+---
+- name: IPSec | Install strongswan
+  ansible.builtin.apt:
+    name: strongswan
+    state: latest
+    update_cache: true
+  become: true
+
+- name: IPSec | Run strongswan
+  ansible.builtin.systemd:
+    name: strongswan-starter
+    enabled: true
+    state: reloaded
+    daemon_reload: true
+  become: true
+
+- name: IPSec | Copy config files
+  ansible.builtin.copy:
+    src: "99-vpn-ipsec.conf"
+    dest: "/etc/sysctl.d/99-vpn-ipsec.conf"
+    owner: root
+    mode: 0644
+  become: true
+
+- name: IPSec | Allow net ip forward
+  ansible.builtin.shell: "sysctl -p /etc/sysctl.d/99-vpn-ipsec.conf"
+  become: true
+
+- name: IPSec | Copy config files to hosts
+  ansible.builtin.template:
+    src: "ipsec_default.conf.j2"
+    dest: "/etc/ipsec.conf"
+    owner: root
+    mode: 0644
+  become: true
+
+- name: IPSec | Run strongswan
+  ansible.builtin.systemd:
+    name: strongswan-starter
+    enabled: true
+    state: started
+    daemon_reload: true
+  become: true
+
+- name: IPSec | Copy config files to hosts
+  ansible.builtin.template:
+    src: "ipsec.secrets.j2"
+    dest: "/etc/ipsec.secrets"
+    owner: root
+    mode: 0644
+  become: true

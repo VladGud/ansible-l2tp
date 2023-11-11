@@ -1,0 +1,16 @@
+[global]
+port = 1701
+auth file = /etc/ppp/chap-secrets
+access control = no
+force userspace = yes
+
+[lns default]
+exclusive = no
+ip range = {{ ip_range }}
+hidden bit = no
+local ip = {{ ansible_host }}
+length bit = yes
+require authentication = yes
+name = {{ connect_name }}
+pppoptfile = /etc/ppp/options.xl2tpd
+flow bit = yes
